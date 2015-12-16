@@ -1,6 +1,6 @@
 //============================================================================
 // Name        : try.cpp
-// Author      : 
+// Author      :
 // Version     :
 // Copyright   : Your copyright notice
 // Description : Hello World in C++, Ansi-style
@@ -10,6 +10,6 @@
 using namespace std;
 
 int main() {
-	cout << "!!!Hello World2!!!" << endl; // prints !!!Hello World!!!
+	cout << "noob" << endl; // prints !!!Hello World!!!
 	return 0;
 }
