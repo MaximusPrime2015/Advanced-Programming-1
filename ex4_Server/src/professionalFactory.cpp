@@ -12,6 +12,9 @@
 #include "producer.h"
 #include "screenwriter.h"
 
+/*
+ * creates a professional according to a given type.
+ */
 Professional* ProfessionalFactory::create(std::string id, std::string name, int age, std::string gender,
 			std::string jobDescription, int profType){
 	switch (profType) {

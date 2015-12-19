@@ -6,7 +6,7 @@
  */
 #include "movie.h"
 #include "professional.h"
-#include "CompareStructs.h"
+#include "CompareFuncs.h"
 #include "ComparatorFactory.h"
 #include "ComparatorWrapper.h"
 #include <stdexcept>
@@ -47,26 +47,44 @@ Movie::Movie(std::string givenCode, std::string givenName, int givenLength, int 
 	summary = givenSummary;
 }
 
+/*
+ *	returns movie's code.
+ */
 std::string Movie::getCode() const {
 	return code;
 }
 
+/*
+ * returns movie's rating.
+ */
 float Movie::getRating(){
 	return rating;
 }
 
+/*
+ * returns movie's release year.
+ */
 int Movie::getReleaseYear(){
 	return rlsYear;
 }
 
+/*
+ * returns string with movie's name.
+ */
 std::string Movie::getName(){
 	return name;
 }
 
+/*
+ *	returns string with movie's summary.
+ */
 std::string Movie::getSummary(){
 	return summary;
 }
 
+/*
+ *	returns string with movie's details.
+ */
 std::string Movie::printMovie(){
 	std::ostringstream lengthBuffer, rlsYearBuffer,
 						ratingBuffer;
@@ -78,6 +96,9 @@ std::string Movie::printMovie(){
 			" " + ratingBuffer.str() + " " + printGenresList() + summary + "\n" + printProfessionals();
 }
 
+/*
+ *	returns a string with genres.
+ */
 std::string Movie::printGenresList(){
 	std::vector<std::string>::iterator it;
 	it = genres.begin();
@@ -93,6 +114,9 @@ std::string Movie::printGenresList(){
 	return output+" ";
 }
 
+/*
+ *	returns a string containing professionals info.
+ */
 std::string Movie::printProfessionals(){
 	std::vector<Professional*>::iterator it;
 	std::string output = "";
@@ -106,18 +130,68 @@ std::string Movie::printProfessionals(){
 	return output;
 }
 
+/*
+ *	returns movie's length.
+ */
 int Movie::getLength(){
 	return length;
 }
 
+/*
+ * returns current movie's genre vector.
+ */
 std::vector<std::string>* Movie::getGenreVec(){
 	return &genres;
 }
 
+/*
+ *	adds a professional to the professionals vector.
+ */
+void Movie::addProfessional(Professional* pro){
+	professionals.push_back(pro);
+}
+
+/*
+ *	adds a genre to the genre vector.
+ */
+void Movie::addGenre(std::string genre){
+	genres.push_back(genre);
+}
+
+/*
+ *	searchs for a given professional in the professionals vector.
+ */
+std::vector<Professional*>::iterator Movie::findProfessional(std::string id){
+	std::vector<Professional*>::iterator proIT;
+	proIT = find_if(professionals.begin(),professionals.end(), proID_Equal(id));
+
+	return proIT;
+}
+
+/*
+ *	checks if a given professionals iterator has a next element.
+ */
+bool Movie::proIteratorHasNext(std::vector<Professional*>::iterator proIT){
+	return proIT != professionals.end();
+}
+
+/*
+ * deletes a given professional from a movie.
+ */
+void Movie::deleteProfessional(std::string proID){
+	professionals.erase(findProfessional(proID));
+}
+
+/*
+ *	returns professionals vector.
+ */
 std::vector<Professional*>* Movie::getProfessionals(){
 	return &professionals;
 }
 
+/*
+ *	sorts professionals vector in current movie.
+ */
 void Movie::sortProfessionals(int order){
 	ComparatorFactory factory;
 	Comparator* cmp = factory.create(order);
@@ -126,6 +200,9 @@ void Movie::sortProfessionals(int order){
 	std::sort(professionals.begin(), professionals.end(), cW);
 }
 
+/*
+ *	compares current movie with another.
+ */
 bool Movie::operator==(const Movie& movie) const{
 	if (code != movie.code){
 		return false;
@@ -154,16 +231,25 @@ bool Movie::operator==(const Movie& movie) const{
 	return true;
 }
 
+/*
+ *	replace current professionals vector with given one
+ */
 void Movie::setGenreVector(std::vector<std::string> genreVec){
 	genres.clear();
 	genres.insert(genres.begin(), genreVec.begin(),genreVec.end());
 }
 
+/*
+ *	replace current professionals vector with given one.
+ */
 void Movie::setProsVector(std::vector<Professional*> pros){
 	professionals.clear();
 	professionals.insert(professionals.begin(), pros.begin(),pros.end());
 }
 
+/*
+ * merges given movie with current.
+ */
 Movie* Movie::mergeWith(Movie* other){
 	Movie* movie;
 	std::vector<std::string> unitedGenres;

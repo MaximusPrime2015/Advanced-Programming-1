@@ -11,6 +11,11 @@
 
 class Comparator {
 public:
+	//---------------------------------------------
+	//| Action: compares two pros.
+	//| Input: 2 Professional pointers.
+	//| Returns: true if this; false if that.
+	//---------------------------------------------
 	virtual bool operator()(const Professional* prof1, const Professional* prof2) = 0;
 	virtual ~Comparator();
 };

@@ -14,6 +14,11 @@
 
 class ComparatorFactory {
 public:
+	//---------------------------------------------------
+	//| Action: creates a comparator.
+	//| Input: sorting order.
+	//| Returns: a comparator according to the given sort.
+	//---------------------------------------------------
 	Comparator* create(int order);
 };
 

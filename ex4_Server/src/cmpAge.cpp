@@ -7,6 +7,9 @@
 
 #include "cmpAge.h"
 
+/*
+ * compares ages of 2 professionals.
+ */
 bool cmpAge::operator()(const Professional* prof1, const Professional* prof2){
 	return prof1->getAge() <= prof2->getAge();
 }

@@ -11,6 +11,9 @@
 #include "professional.h"
 
 template <typename T>
+/*
+ * checks if the contents of 2 pointers are equal.
+ */
 struct pointer_values_equal{
     const T* to_find;
 
@@ -20,6 +23,9 @@ struct pointer_values_equal{
     }
 };
 
+/*
+ * checks if 2 strings are equal.
+ */
 struct strings_Equal{
 	std::string str;
 	strings_Equal(const std::string& str) : str(str) {}
@@ -29,6 +35,9 @@ struct strings_Equal{
 	}
 };
 
+/*
+ * checks if 2 movie codes are equal.
+ */
 struct movieCode_Equal{
 	std::string code;
 	movieCode_Equal(const std::string& code) : code(code) {}
@@ -38,6 +47,9 @@ struct movieCode_Equal{
 	}
 };
 
+/*
+ * checks if 2 professional codes are equal.
+ */
 struct proID_Equal{
 	std::string ID;
 	proID_Equal(const std::string& ID) : ID(ID) {}

@@ -11,6 +11,9 @@ Actor::Actor(std::string id, std::string name, int age, std::string gender, std:
 Professional::Professional(id, name, age, gender, jobDescription)
 {}
 
+/*
+ * returns actor's description.
+ */
 std::string Actor::printProfessional(){
 	std::ostringstream ageBuffer;
 	ageBuffer << age;

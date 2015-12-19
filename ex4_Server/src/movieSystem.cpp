@@ -6,15 +6,12 @@
  */
 
 #include <algorithm>
+#include <string>
 #include "movieSystem.h"
 #include "professionalFactory.h"
-#include "cmpAge.h"
-#include "cmpID.h"
-#include "cmpMovieNum.h"
-#include <string>
 #include "ComparatorFactory.h"
 #include "ComparatorWrapper.h"
-#include "CompareStructs.h"
+#include "CompareFuncs.h"
 
 /*
  *	adds a movie to the system.
@@ -59,10 +56,8 @@ std::string MovieSystem::addProfessionalToMovie(std::string movieCode, std::stri
 	Professional* pro;
 	Movie* movie;
 	movieVec::iterator movieGeneralIT;
-	movieVec* movieVector;
 	proVec::iterator proGeneralIT;
 	proVec::iterator proIT;
-	proVec* proVector;
 
 	movieGeneralIT = find_if(Movies.begin(), Movies.end(), movieCode_Equal(movieCode));
 	// movie not found
@@ -77,17 +72,17 @@ std::string MovieSystem::addProfessionalToMovie(std::string movieCode, std::stri
 		return "Failure";
 	}
 	pro = *proGeneralIT;
-	proVector = movie->getProfessionals();
-	movieVector = pro->getMovies();
 
 	// search for pro in the movie's professionals vector
-	proIT = find_if(proVector->begin(),proVector->end(), proID_Equal(profID));
+	proIT = movie->findProfessional(profID);
+
 	// pro is in the movie
-	if(proIT != proVector->end()){
+	if(movie->proIteratorHasNext(proIT)){
 		return "Failure";
 	}
-	proVector->push_back(pro);
-	movieVector->push_back(movie);
+
+	pro->addMovie(movie);
+	movie->addProfessional(pro);
 	// sort professional list
 	sortMovieProfessionals(movieCode, 1);
 
@@ -103,32 +98,29 @@ std::string MovieSystem::addMovieToGenre(std::string MovieCode, std::string genr
 	movieVec::iterator movieGeneralIT;
 	genreToMovieMap::iterator genreIT;
 	movieVec* genre_movies;
+	movieVec* newMovieVector;
 	Movie* movie;
 
 	movieGeneralIT = find_if(Movies.begin(), Movies.end(), movieCode_Equal(MovieCode));
 	// movie not found
 	if (movieGeneralIT == Movies.end()){
-		//std::cout << "Failure" << std::endl;
 		return "Failure";
 	}
 	movie = *movieGeneralIT;
-
 	genreIT = genreToMovies.find(genre);
+
 	// genre does not exist in the system
 	if (genreIT == genreToMovies.end()){
 		// create a new entry for the genre
-		movieVec* newMovieVector = new movieVec;
-		//newMovieMap->insert(std::pair<std::string,Movie*>(MovieCode,movie));
+		newMovieVector = new movieVec;
 		newMovieVector->push_back(movie);
 		genreToMovies.insert(std::pair<std::string,movieVec*>(genre,newMovieVector));
-		movie->getGenreVec()->push_back(genre);
+		movie->addGenre(genre);
 	}else{
 		genre_movies = genreIT->second;
-		//genreMovies->insert(std::pair<std::string,Movie*>(genre,movie));
 		genre_movies->push_back(movie);
-		movie->getGenreVec()->push_back(genre);
+		movie->addGenre(genre);
 	}
-	//std::cout << "Success" << std::endl;
 	return "Success";
 }
 
@@ -138,14 +130,14 @@ std::string MovieSystem::addMovieToGenre(std::string MovieCode, std::string genr
  *	return "Failure" if operation failed.
  */
 std::string MovieSystem::sortMovieProfessionals(std::string MovieCode, int order){
-	movieVec::iterator movieVecIT;
+	movieVec::iterator movieIT;
 
-	movieVecIT = find_if(Movies.begin(), Movies.end(), movieCode_Equal(MovieCode));
+	movieIT = find_if(Movies.begin(), Movies.end(), movieCode_Equal(MovieCode));
 	// movie not found
-	if (movieVecIT == Movies.end()){
+	if (movieIT == Movies.end()){
 		return "Failure";
 	}
-	(*movieVecIT)->sortProfessionals(order);
+	(*movieIT)->sortProfessionals(order);
 
 	return "Success";
 }
@@ -156,14 +148,14 @@ std::string MovieSystem::sortMovieProfessionals(std::string MovieCode, int order
  *	return "Failure" if operation failed.
  */
 std::string MovieSystem::printMovieProfessionals(std::string MovieCode){
-	movieVec::iterator movieVecIT;
+	movieVec::iterator movieIT;
 
-	movieVecIT = find_if(Movies.begin(), Movies.end(), movieCode_Equal(MovieCode));
+	movieIT = find_if(Movies.begin(), Movies.end(), movieCode_Equal(MovieCode));
 	// movie not found
-	if (movieVecIT == Movies.end()){
+	if (movieIT == Movies.end()){
 		return "Failure";
 	}
-	return (*movieVecIT)->printProfessionals();
+	return (*movieIT)->printProfessionals();
 }
 
 /*
@@ -172,14 +164,14 @@ std::string MovieSystem::printMovieProfessionals(std::string MovieCode){
  *	return "Failure" if operation failed.
  */
 std::string MovieSystem::printMovie(std::string MovieCode){
-	movieVec::iterator movieVecIT;
+	movieVec::iterator movieIT;
 
-	movieVecIT = find_if(Movies.begin(), Movies.end(), movieCode_Equal(MovieCode));
+	movieIT = find_if(Movies.begin(), Movies.end(), movieCode_Equal(MovieCode));
 	// movie not found
-	if (movieVecIT == Movies.end()){
+	if (movieIT == Movies.end()){
 		return "Failure";
 	}
-	return (*movieVecIT)->printMovie();
+	return (*movieIT)->printMovie();
 }
 
 /*
@@ -221,9 +213,11 @@ std::string MovieSystem::mergeMovies(std::vector<std::string> movieCodes){
 		it++;
 	}
 	Movies.push_back(movie);
+
 	genreVec = movie->getGenreVec();
 	for (auxGenreIT = genreVec->begin(); auxGenreIT != genreVec->end(); auxGenreIT++){
-		genreToMovies.find(*auxGenreIT)->second->push_back(movie);
+		// add the new movie to genres
+		(genreToMovies.find(*auxGenreIT)->second)->push_back(movie);
 	}
 	return "Success";
 }
@@ -271,11 +265,10 @@ std::string MovieSystem::deleteMovie(std::string movieCode){
 	}
 	movie = *movieGeneralIT;
 	proVector = movie->getProfessionals();
+
 	// Delete movie from each professional
 	for(proIT = proVector->begin();proIT != proVector->end(); proIT++){
-		movieVector = (*proIT)->getMovies();
-		movieIT = find_if(movieVector->begin(), movieVector->end(), movieCode_Equal(movieCode));
-		movieVector->erase(movieIT);
+		(*proIT)->deleteMovie(movieCode);
 	}
 
 	// Delete movie from genre map
@@ -310,6 +303,7 @@ std::string MovieSystem::deleteProfessional(std::string proID){
 	}
 	pro = *proGeneralIT;
 	movieVector = pro->getMovies();
+
 	// Delete pro from each movie
 	for(movieIT = movieVector->begin();movieIT != movieVector->end(); movieIT++){
 		deleteProfessionalFromMovie((*movieIT)->getCode(), proID);
@@ -327,9 +321,7 @@ std::string MovieSystem::deleteProfessional(std::string proID){
 std::string MovieSystem::deleteProfessionalFromMovie(std::string MovieCode, std::string profID){
 	Movie* movie;
 	movieVec::iterator movieGeneralIT;
-	proVec::iterator proGeneralIT;
 	proVec::iterator proIT;
-	proVec* proVector;
 
 	movieGeneralIT = find_if(Movies.begin(), Movies.end(), movieCode_Equal(MovieCode));
 	// movie not found
@@ -337,13 +329,13 @@ std::string MovieSystem::deleteProfessionalFromMovie(std::string MovieCode, std:
 		return "Failure";
 	}
 	movie = *movieGeneralIT;
-	proVector = movie->getProfessionals();
-	proGeneralIT = find_if(proVector->begin(), proVector->end(), proID_Equal(profID));
+	proIT = movie->findProfessional(profID);
+
 	// pro not found
-	if (proGeneralIT == proVector->end()){
+	if (!movie->proIteratorHasNext(proIT)){
 		return "Failure";
 	}
-	proVector->erase(proGeneralIT);
+	movie->deleteProfessional(profID);
 	return "Success";
 }
 

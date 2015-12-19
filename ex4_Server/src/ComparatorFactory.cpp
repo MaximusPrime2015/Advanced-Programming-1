@@ -7,6 +7,9 @@
 
 #include "ComparatorFactory.h"
 
+/*
+ * creates a comparator according to a given sorting order.
+ */
 Comparator* ComparatorFactory::create(int order){
 	switch (order) {
 		case 1:

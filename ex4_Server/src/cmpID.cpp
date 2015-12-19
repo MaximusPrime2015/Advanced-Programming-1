@@ -7,6 +7,9 @@
 
 #include "cmpID.h"
 
+/*
+ * compares IDs of 2 professionals.
+ */
 bool cmpID::operator()(const Professional* prof1, const Professional* prof2){
 	return prof1->getID() <= prof2->getID();
 }
