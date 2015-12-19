@@ -6,27 +6,12 @@
  */
 #include "movie.h"
 #include "professional.h"
+#include "CompareStructs.h"
+#include "ComparatorFactory.h"
+#include "ComparatorWrapper.h"
 #include <stdexcept>
 #include <iostream>
 #include <algorithm>
-
-struct strings_Equal{
-	std::string str;
-	strings_Equal(const std::string& str) : str(str) {}
-
-    bool operator()(const std::string other) const{
-		return other == str;
-	}
-};
-
-struct proID_Equal{
-	std::string ID;
-	proID_Equal(const std::string& ID) : ID(ID) {}
-
-    bool operator()(const Professional* pro) const{
-    	return ID == pro->getID();
-    }
-};
 
 Movie::Movie(std::string givenCode, std::string givenName, int givenLength, int givenRlsYear,
 		float givenRating, std::string givenSummary)
@@ -133,6 +118,14 @@ std::vector<Professional*>* Movie::getProfessionals(){
 	return &professionals;
 }
 
+void Movie::sortProfessionals(int order){
+	ComparatorFactory factory;
+	Comparator* cmp = factory.create(order);
+	ComparatorWrapper cW = *(new ComparatorWrapper(cmp));
+
+	std::sort(professionals.begin(), professionals.end(), cW);
+}
+
 bool Movie::operator==(const Movie& movie) const{
 	if (code != movie.code){
 		return false;
@@ -169,18 +162,6 @@ void Movie::setGenreVector(std::vector<std::string> genreVec){
 void Movie::setProsVector(std::vector<Professional*> pros){
 	professionals.clear();
 	professionals.insert(professionals.begin(), pros.begin(),pros.end());
-}
-
-bool Movie::checkPro(Professional* pro){
-	std::vector<Professional*>::iterator it;
-	pointer_values_equal<Professional> eq = {pro};
-
-	it = find_if(professionals.begin(),professionals.end(), eq);
-	if (it == professionals.end()){
-		return false;
-	}
-
-	return true;
 }
 
 Movie* Movie::mergeWith(Movie* other){
@@ -248,4 +229,3 @@ Movie* Movie::mergeWith(Movie* other){
 
 	return movie;
 }
-

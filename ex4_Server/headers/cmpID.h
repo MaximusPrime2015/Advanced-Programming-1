@@ -7,9 +7,9 @@
 
 #ifndef CMPID_H_
 #define CMPID_H_
-#include "professional.h"
+#include "Comparator.h"
 
-class cmpID
+class cmpID : public Comparator
 {
 public:
 	//---------------------------------------------

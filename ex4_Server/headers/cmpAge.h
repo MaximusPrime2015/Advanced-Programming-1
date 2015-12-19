@@ -7,9 +7,9 @@
 
 #ifndef CMPAGE_H_
 #define CMPAGE_H_
-#include "professional.h"
+#include "Comparator.h"
 
-class cmpAge
+class cmpAge : public Comparator
 {
 public:
 	//---------------------------------------------

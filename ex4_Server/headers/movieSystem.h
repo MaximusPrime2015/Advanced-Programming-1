@@ -32,7 +32,7 @@ public:
 	//| Input: Movie's code, name, length, release year, rating and summary.
 	//| Returns: none.
 	//---------------------------------------------
-	void addMovie(std::string code, std::string name, int length, int rlsYear, float
+	std::string addMovie(std::string code, std::string name, int length, int rlsYear, float
 	rating, std::string summary);
 
 	//---------------------------------------------
@@ -41,7 +41,7 @@ public:
 	//| type.
 	//| Returns: none.
 	//---------------------------------------------
-	void addProfessional(std::string id, std::string name, int age, std::string gender,
+	std::string addProfessional(std::string id, std::string name, int age, std::string gender,
 			std::string jobDescription, int profType);
 
 	//---------------------------------------------
@@ -50,7 +50,7 @@ public:
 	//| Input: a Movie's code, and Professional's ID.
 	//| Returns: none.
 	//---------------------------------------------
-	void addProfessionalToMovie(std::string MovieCode, std::string profID);
+	std::string addProfessionalToMovie(std::string MovieCode, std::string profID);
 
 	//---------------------------------------------
 	//| Action: adds an existing Movie to a genre(creates a new genre entry
@@ -87,7 +87,7 @@ public:
 	//| Input: set of Movies.
 	//| Returns: none.
 	//---------------------------------------------
-	void mergeMovies(std::vector<std::string> MovieCodes);
+	std::string mergeMovies(std::vector<std::string> MovieCodes);
 
 	//---------------------------------------------
 	//| Action: prints Movies with a certain Professional.
@@ -101,14 +101,14 @@ public:
 	//| Input: Movie code.
 	//| Returns: none.
 	//---------------------------------------------
-	void deleteMovie(std::string code);
+	std::string deleteMovie(std::string code);
 
 	//---------------------------------------------
 	//| Action: deletes a Professional from the system.
 	//| Input: Professionals code.
 	//| Returns: none.
 	//---------------------------------------------
-	void deleteProfessional(std::string code);
+	std::string deleteProfessional(std::string code);
 
 	//---------------------------------------------
 	//| Action: deletes a Professional from a Movie.

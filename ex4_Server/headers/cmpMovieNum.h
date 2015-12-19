@@ -7,9 +7,9 @@
 
 #ifndef CMPMOVIENUM_H_
 #define CMPMOVIENUM_H_
-#include "professional.h"
+#include "Comparator.h"
 
-class cmpMovieNum
+class cmpMovieNum: public Comparator
 {
 public:
 	//---------------------------------------------

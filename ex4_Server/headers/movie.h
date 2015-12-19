@@ -82,6 +82,8 @@ public:
 
 	std::vector<Professional*>* getProfessionals();
 
+	void sortProfessionals(int order);
+
 	//---------------------------------------------
 	//| Action: prints the Movie's details.
 	//| Input: none.
@@ -93,8 +95,6 @@ public:
 
 	std::string printGenresList();
 
-	bool checkPro(Professional* pro);
-
 	bool operator==(const Movie& pro) const;
 
 	//---------------------------------------------
@@ -103,16 +103,6 @@ public:
 	//| Returns: the merged Movie.
 	//---------------------------------------------
 	Movie* mergeWith(Movie* Movie);
-};
-
-template <typename T>
-struct pointer_values_equal{
-    const T* to_find;
-
-    bool operator()(const T* other) const
-    {
-        return *to_find == *other;
-    }
 };
 
 #endif /* MOVIE_H_ */
