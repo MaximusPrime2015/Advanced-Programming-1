@@ -25,9 +25,14 @@ std::string MovieSystem::addMovie(std::string code, std::string name,
 	if (find_if(Movies.begin(), Movies.end(), movieCode_Equal(code)) != Movies.end()){
 		return "Failure";
 	}
+	try{
 	Movie* movie = new Movie(code, name, length, rlsYear, rating, summary);
 	Movies.push_back(movie);
 	return "Success";
+	}
+	catch (std::string &e) {
+		return "Failure";
+	}
 }
 
 /*
@@ -43,9 +48,14 @@ std::string MovieSystem::addProfessional(std::string id, std::string name,
 	if (find_if(Professionals.begin(), Professionals.end(), proID_Equal(id)) != Professionals.end()){
 		return "Failure";
 	}
+	try{
 	Professional* pro = factory.create(id, name, age, gender,jobDescription,profType);
 	Professionals.push_back(pro);
 	return "Success";
+	}
+	catch (std::string &e) {
+		return "Failure";
+	}
 }
 
 /*
