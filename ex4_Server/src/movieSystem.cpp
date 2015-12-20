@@ -12,6 +12,7 @@
 #include "ComparatorFactory.h"
 #include "ComparatorWrapper.h"
 #include "CompareFuncs.h"
+#define	skipSpace index++
 
 /*
  *	adds a movie to the system.
@@ -414,131 +415,368 @@ std::vector<std::string> split(const std::string &s, char delim) {
  */
 void MovieSystem::start(){
 	using namespace std;
-	genreToMovieMap::iterator it;
-	movieVec::iterator mIT;
-	std::vector<std::string> parsed;
-	int command;
-	string movieCode;
-	string movieName;
-	int movieLength;
-	int movieReleaseYear;
-	float movieRating;
-	string movieDescription;
-	string genre;
-	string moviesToMerge;
-	int sortOrder;
+	string client_input;
+	string output;
+	int i, command;
 
-	int proType;
-	string proID;
-	int proAge;
-	string proSpecDesc;
-	string proGender;
-	string proName;
-	string temp;
-
-	cin >> command;
-	while(command){
+	i = 0;
+	getline(std::cin, client_input);
+	command = getIntFromStr(client_input, i);
+	// increment i so that it points to the first character after the space
+	i++;
+	while(true){
 		switch (command) {
 			case -1:
 				return;
 			case 1:
-				cin >> movieCode;
-				movieName = "";
-				cin >> temp;
-				while(!isdigit(temp[0])){
-					if(movieName == ""){
-						movieName = temp;
-						cin >> temp;
-					}else{
-						movieName = movieName + " " + temp;
-						cin >> temp;
-					}
-				}
-				movieLength = atoi(temp.c_str());
-				cin >> movieReleaseYear;
-				cin >> movieRating;
-				// skip whitespace preceding movie description
-				ws(cin);
-				getline(std::cin, movieDescription);
-				cout << addMovie(movieCode, movieName, movieLength, movieReleaseYear, movieRating, movieDescription) << endl;
+				output = process_AddMovie(client_input, i);
 				break;
-
 			case 2:
-				cin >> proType;
-				cin >> proID;
-				cin >> proAge;
-				// start of description
-				cin >> temp;
-				proSpecDesc = "";
-				while(temp != "male" && temp != "female"){
-					proSpecDesc = proSpecDesc + temp;
-					cin >> temp;
-				}
-				// temp is now "male" or "female"
-				proGender = temp;
-				ws(cin);
-				getline(std::cin, proName);
-				cout << addProfessional(proID, proName, proAge, proGender, proSpecDesc, proType) << endl;
+				output = process_AddProfessional(client_input, i);
 				break;
 			case 3:
-				cin >> movieCode;
-				cin >> proID;
-				cout << addProfessionalToMovie(movieCode, proID) << endl;
+				output = process_addProfessionalToMovie(client_input, i);
 				break;
 			case 4:
-				cin >> movieCode;
-				cin >> genre;
-				cout << addMovieToGenre(movieCode, genre) << endl;
+				output = process_addMovieToGenre(client_input, i);
 				break;
 			case 5:
-				cin >> movieCode;
-				cin >> sortOrder;
-				cout << sortMovieProfessionals(movieCode, sortOrder) << endl;
+				output = process_sortMovieProfessionals(client_input, i);
 				break;
 			case 6:
-				cin >> movieCode;
-				cout << printMovieProfessionals(movieCode);
+				output = process_printMovieProfessionals(client_input, i);
 				break;
 			case 7:
-				cin >> movieCode;
-				cout << printMovie(movieCode);
+				output = process_printMovie(client_input, i);
 				break;
 			case 8:
-				cin >> moviesToMerge;
-				parsed = split(moviesToMerge, ',');
-				cout << mergeMovies(parsed) << endl;
+				output = process_mergeMovies(client_input, i);
 				break;
 			case 9:
-				cin >> proID;
-				cout << printMoviesWithProfessional(proID);
+				output = process_printMoviesWithProfessional(client_input, i);
 				break;
 			case 10:
-				cin >> movieCode;
-				cout << deleteMovie(movieCode) << endl;
+				output = process_deleteMovie(client_input, i);
 				break;
 			case 11:
-				cin >> proID;
-				cout << deleteProfessional(proID) << endl;
+				output = process_deleteProfessional(client_input, i);
 				break;
 			case 12:
-				cin >> movieCode;
-				cin >> proID;
-				cout << deleteProfessionalFromMovie(movieCode, proID) << endl;
+				output = process_deleteProfessionalFromMovie(client_input, i);
 				break;
 			case 13:
-				cout << printMoviesList();
+				output = printMoviesList();
 				break;
 			case 14:
-				cout << printProfessionalsList();
+				output = printProfessionalsList();
 				break;
 			case 15:
-				cin >> genre;
-				cout << printMoviesByGenre(genre);
+				output = process_printMoviesByGenre(client_input, i);
 				break;
 			default:
 				break;
 		}
-		cin >> command;
+		cout << output << endl;
+		i = 0;
+		getline(std::cin, client_input);
+		command = getIntFromStr(client_input, i);
+		// increment i so that it points to the first character after the space
+		i++;
+	}
+}
+
+/*
+============================================================================================================
+============================================================================================================
+
+									string processing functions
+
+============================================================================================================
+============================================================================================================
+*/
+/*
+ * processes command string in the following format:
+ * 1 [id] [name] [length] [year] [rating] [desc]
+ */
+std::string MovieSystem::process_AddMovie(std::string strToProcess, int index){
+	std::string movieCode;
+	std::string movieName;
+	int movieLength = 0;
+	int movieReleaseYear = 0;
+	int temp;
+	float movieRating;
+	std::string movieDescription;
+
+	// ID
+	movieCode = getString(strToProcess, index);
+	skipSpace;
+
+	// movie name
+	while(strToProcess[index] != ' ' && (strToProcess[index] > 58 || strToProcess[index] < 48)){
+		movieName += strToProcess[index];
+		index++;
+	}
+	skipSpace;
+
+	// movie length
+	movieLength = getIntFromStr(strToProcess, index);
+	skipSpace;
+
+	// movie release year
+	movieReleaseYear = getIntFromStr(strToProcess, index);
+	skipSpace;
+
+	// movie Rating
+	temp = 0;
+	while(strToProcess[index] != ' '){
+		//convert char digit to int
+		if (strToProcess[index] != '.'){
+			temp = temp*10 + (strToProcess[index]-48);
+		}else{
+			movieRating = temp;
+			temp = 0;
+		}
+		index++;
+	}
+	movieRating += (temp/10.0);
+	skipSpace;
+
+	// movie Description
+	movieDescription = getEndOfString(strToProcess, index);
+
+	return addMovie(movieCode, movieName, movieLength, movieReleaseYear, movieRating, movieDescription);
+}
+
+/*
+ * processes command string in the following format:
+ * 2 [type] [id] [age] [specific-desc] [gender] [name]
+ */
+std::string MovieSystem::process_AddProfessional(std::string strToProcess, int index){
+	int proType = 0;
+	int proAge = 0;
+	std::string proID;
+	std::string proName;
+	std::string proGender;
+	std::string proDescription;
+
+	// type
+	proType = getIntFromStr(strToProcess, index);
+	skipSpace;
+
+	// ID
+	proID = getString(strToProcess, index);
+	skipSpace;
+
+	// age
+	proAge = getIntFromStr(strToProcess, index);
+	skipSpace;
+
+	// specific-desc
+	proDescription = getString(strToProcess, index);
+	skipSpace;
+
+	// gender
+	proGender = getString(strToProcess, index);
+	skipSpace;
+
+	// name
+	proName = getEndOfString(strToProcess, index);
+
+	return addProfessional(proID, proName, proAge, proGender, proDescription, proType);
+}
+
+/*
+ * processes command string in the following format:
+ * 3 [movie-id] [pro-id]
+ */
+std::string MovieSystem::process_addProfessionalToMovie(std::string strToProcess, int index){
+	std::string movieCode;
+	std::string proID;
+
+	// movie code
+	movieCode = getString(strToProcess, index);
+	skipSpace;
+
+	// pro id
+	proID = getString(strToProcess, index);
+
+	return addProfessionalToMovie(movieCode, proID);
+}
+
+/*
+ * processes command string in the following format:
+ * 4 [movie-id] [genre]
+ */
+std::string MovieSystem::process_addMovieToGenre(std::string strToProcess, int index){
+	std::string movieCode;
+	std::string genre;
+
+	// movie code
+	movieCode = getString(strToProcess, index);
+	skipSpace;
+
+	genre = getEndOfString(strToProcess, index);
+	return addMovieToGenre(movieCode, genre);
+}
+
+/*
+ * processes command string in the following format:
+ * 5 [movie-id] [sort-type]
+ */
+std::string MovieSystem::process_sortMovieProfessionals(std::string strToProcess, int index){
+	std::string movieCode;
+	int order;
+
+	// movie code
+	movieCode = getString(strToProcess, index);
+	skipSpace;
+
+	// order
+	order = getIntFromStr(strToProcess, index);
+
+	return sortMovieProfessionals(movieCode, order);
+}
+
+/*
+ * processes command string in the following format:
+ * 6 [movie-id]
+ */
+std::string MovieSystem::process_printMovieProfessionals(std::string strToProcess, int index){
+	std::string movieCode;
+
+	// movie code
+	movieCode = getString(strToProcess, index);
+	skipSpace;
+
+	return printMovieProfessionals(movieCode);
+}
+
+/*
+ * processes command string in the following format:
+ * 7 [movie-id]
+ */
+std::string MovieSystem::process_printMovie(std::string strToProcess, int index){
+	std::string movieCode;
+
+	// movie code
+	movieCode = getString(strToProcess, index);
+	skipSpace;
+
+	return printMovie(movieCode);
+}
+
+/*
+ * processes command string in the following format:
+ * 8 [movie-id],...,[movie-id]
+ */
+std::string MovieSystem::process_mergeMovies(std::string strToProcess, int index){
+	std::string moviesToMerge = strToProcess.substr(index, strToProcess.length());
+	std::vector<std::string> parsed = split(moviesToMerge, ',');
+
+	return mergeMovies(parsed);
+}
+
+/*
+ * processes command string in the following format:
+ * 9 [pro-id]
+ */
+std::string MovieSystem::process_printMoviesWithProfessional(std::string strToProcess, int index){
+	std::string proID;
+
+	// pro id
+	proID = getString(strToProcess, index);
+	skipSpace;
+
+	return printMoviesWithProfessional(proID);
+}
+
+/*
+ * processes command string in the following format:
+ * 10 [movie-id]
+ */
+std::string MovieSystem::process_deleteMovie(std::string strToProcess, int index){
+	std::string movieCode;
+
+	// movie code
+	movieCode = getString(strToProcess, index);
+	skipSpace;
+
+	return deleteMovie(movieCode);
+}
+
+/*
+ * processes command string in the following format:
+ * 11 [pro-id]
+ */
+std::string MovieSystem::process_deleteProfessional(std::string strToProcess, int index){
+	std::string proID;
+
+	// pro id
+	proID = getString(strToProcess, index);
+	skipSpace;
+
+	return deleteProfessional(proID);
+}
+
+/*
+ * processes command string in the following format:
+ * 12 [movie-id] [pro-id]
+ */
+std::string MovieSystem::process_deleteProfessionalFromMovie(std::string strToProcess, int index){
+	std::string proID;
+	std::string movieCode;
+
+	// movie code
+	movieCode = getString(strToProcess, index);
+	skipSpace;
+
+	// pro id
+	proID = getString(strToProcess, index);
+
+	return deleteProfessionalFromMovie(movieCode, proID);
+}
+
+/*
+ * processes command string in the following format:
+ * 15 [genre]
+ */
+std::string MovieSystem::process_printMoviesByGenre(std::string strToProcess, int index){
+	std::string genre;
+
+	// genre
+	genre = getEndOfString(strToProcess, index);
+
+	return printMoviesByGenre(genre);
+}
+
+int getIntFromStr(std::string str, int &index){
+	int output = 0;
+	int flag = 0;
+
+	// if str starts with a negative number
+	if(str[index] == '-'){
+		flag = 1;
+		index++;
 	}
 
+	while(str[index] && str[index] != ' '){
+		output = output*10 + str[index]-48;
+		index++;
+	}
+	if(flag){ output *= -1; }
+	return output;
+}
+
+std::string getString(std::string str, int &index){
+	std::string output;
+
+	while(str[index] && str[index] != ' '){
+		output += str[index];
+		index++;
+	}
+	return output;
+}
+
+std::string getEndOfString(std::string str, int &index){
+	return str.substr(index, str.length());
 }
