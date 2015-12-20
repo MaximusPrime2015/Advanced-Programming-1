@@ -10,6 +10,9 @@ Director::Director(std::string id, std::string name, int age, std::string gender
 Professional::Professional(id, name, age, gender, jobDescription)
 {}
 
+/*
+ * returns director description.
+ */
 std::string Director::printProfessional(){
 	return name;
 }

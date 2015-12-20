@@ -11,6 +11,9 @@ Screenwriter::Screenwriter(std::string id, std::string name, int age, std::strin
 Professional::Professional(id, name, age, gender, jobDescription)
 {}
 
+/*
+ * return Screen writer's description.
+ */
 std::string Screenwriter::printProfessional(){
 
 	return name + " " + jobDescription;
