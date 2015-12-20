@@ -5,9 +5,16 @@
  *      Author: max
  */
 #include <iostream>
+#include <stdlib.h>
+#include "clientManagement.h"
 using namespace std;
-int main(int argc,char** argv){
+int main(int argc, char** argv) {
+	client_Management *cmt;
+	int type = atoi(argv[1]);
+	char *a = argv[3];
+	int port = atoi(a);
+	cmt = new client_Management(type,port,argv[1]);
+	cmt->startCommunication();
 	return 0;
 }
-
 
