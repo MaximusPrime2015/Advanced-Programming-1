@@ -6,8 +6,7 @@
  */
 #include <iostream>
 using namespace std;
-int main(){
-	cout<< "ESTI" <<endl;
+int main(int argc,char** argv){
 	return 0;
 }
 
