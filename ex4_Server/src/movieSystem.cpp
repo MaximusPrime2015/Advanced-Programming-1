@@ -423,76 +423,57 @@ std::vector<std::string> split(const std::string &s, char delim) {
  * start function for the system.
  * handles data from the client.
  */
-void MovieSystem::start(){
+const char* MovieSystem::start(const char *input){
 	using namespace std;
-	string client_input;
-	string output;
 	int i, command;
+	string client_input;
 
+	if(input == NULL){
+		client_input = "-1";
+	}else{
+		client_input.assign(input);
+	}
 	i = 0;
-	getline(std::cin, client_input);
 	command = getIntFromStr(client_input, i);
 	// increment i so that it points to the first character after the space
 	i++;
-	while(true){
-		switch (command) {
-			case -1:
-				return;
-			case 1:
-				output = process_AddMovie(client_input, i);
-				break;
-			case 2:
-				output = process_AddProfessional(client_input, i);
-				break;
-			case 3:
-				output = process_addProfessionalToMovie(client_input, i);
-				break;
-			case 4:
-				output = process_addMovieToGenre(client_input, i);
-				break;
-			case 5:
-				output = process_sortMovieProfessionals(client_input, i);
-				break;
-			case 6:
-				output = process_printMovieProfessionals(client_input, i);
-				break;
-			case 7:
-				output = process_printMovie(client_input, i);
-				break;
-			case 8:
-				output = process_mergeMovies(client_input, i);
-				break;
-			case 9:
-				output = process_printMoviesWithProfessional(client_input, i);
-				break;
-			case 10:
-				output = process_deleteMovie(client_input, i);
-				break;
-			case 11:
-				output = process_deleteProfessional(client_input, i);
-				break;
-			case 12:
-				output = process_deleteProfessionalFromMovie(client_input, i);
-				break;
-			case 13:
-				output = printMoviesList();
-				break;
-			case 14:
-				output = printProfessionalsList();
-				break;
-			case 15:
-				output = process_printMoviesByGenre(client_input, i);
-				break;
-			default:
-				break;
-		}
-		cout << output << endl;
-		i = 0;
-		getline(std::cin, client_input);
-		command = getIntFromStr(client_input, i);
-		// increment i so that it points to the first character after the space
-		i++;
+	switch (command) {
+		case -1:
+			return "-1";
+		case 1:
+			return process_AddMovie(client_input, i).c_str();
+		case 2:
+			return process_AddProfessional(client_input, i).c_str();
+		case 3:
+			return process_addProfessionalToMovie(client_input, i).c_str();
+		case 4:
+			return process_addMovieToGenre(client_input, i).c_str();
+		case 5:
+			return process_sortMovieProfessionals(client_input, i).c_str();
+		case 6:
+			return process_printMovieProfessionals(client_input, i).c_str();
+		case 7:
+			return process_printMovie(client_input, i).c_str();
+		case 8:
+			return process_mergeMovies(client_input, i).c_str();
+		case 9:
+			return process_printMoviesWithProfessional(client_input, i).c_str();
+		case 10:
+			return process_deleteMovie(client_input, i).c_str();
+		case 11:
+			return process_deleteProfessional(client_input, i).c_str();
+		case 12:
+			return process_deleteProfessionalFromMovie(client_input, i).c_str();
+		case 13:
+			return printMoviesList().c_str();
+		case 14:
+			return printProfessionalsList().c_str();
+		case 15:
+			return process_printMoviesByGenre(client_input, i).c_str();
+		default:
+			break;
 	}
+	return "";
 }
 
 /*

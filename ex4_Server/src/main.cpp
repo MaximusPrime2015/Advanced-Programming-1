@@ -8,10 +8,8 @@
 
 int main(){
 	MovieSystem ms;
-	ms.start();
+	const char* inp = "1 xyz Inception 148 2010 8.8 This is the description";
+	std::cout << ms.start(inp) << std::endl;
 
 	return 1;
 }
-
-
-

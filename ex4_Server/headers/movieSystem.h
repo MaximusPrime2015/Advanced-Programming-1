@@ -144,7 +144,7 @@ public:
 	 * Input: none.
 	 * Returns: none.
 	*/
-	void start();
+	const char* start(const char *input);
 
 	/*
 	 =========================================================================
