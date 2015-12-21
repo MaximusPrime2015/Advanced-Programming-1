@@ -18,7 +18,7 @@ client_UDP::~client_UDP() {
 }
 
 void client_UDP::setCommunication(char * ip, int port) {
-	this->sock = socket(AF_INET, SOCK_STREAM, 0);
+	this->sock = socket(AF_INET, SOCK_DGRAM, 0);
 	if (sock < 0) {
 		perror("error creating socket");
 	}
