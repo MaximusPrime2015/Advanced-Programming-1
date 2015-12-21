@@ -24,7 +24,7 @@ void ServerTCP::setCommunication(int port){
 		perror("ServerTCP: error creating socket");
 	}
 
-	memset(&sinServer, 0, sizeof(sinServer));
+	memset(&sinServer, 0, sizeof(&sinServer));
 	sinServer.sin_family = AF_INET;
 	sinServer.sin_addr.s_addr = INADDR_ANY;
 	sinServer.sin_port = htons(port);

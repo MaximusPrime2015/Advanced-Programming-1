@@ -18,10 +18,11 @@
 
 class Server_Communicator {
 protected:
+	struct sockaddr_in sinClient;
 	struct sockaddr_in sinServer;
 	int server_sock;
 	int client_sock;
-	struct sockaddr_in sinClient;
+
 public:
 	Server_Communicator();
 	virtual ~Server_Communicator();
