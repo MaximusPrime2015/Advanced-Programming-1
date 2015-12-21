@@ -144,7 +144,7 @@ public:
 	 * Input: none.
 	 * Returns: none.
 	*/
-	const char* start(const char *input);
+	std::string start(const char *input);
 
 	/*
 	 =========================================================================

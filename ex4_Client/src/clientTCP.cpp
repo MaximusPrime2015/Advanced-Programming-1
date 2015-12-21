@@ -21,10 +21,12 @@ void client_TCP::setCommunication(char * ip, int port) {
 	if (sock < 0) {
 		perror("error creating socket");
 	}
+
 	memset(&this->sinComu,0,sizeof(this->sinComu));
 	this->sinComu.sin_family = AF_INET;
 	this->sinComu.sin_addr.s_addr = inet_addr(ip);
 	this->sinComu.sin_port = htons(port);
+
 	if (connect(this->sock, (struct sockaddr *) &(this->sinComu),
 			sizeof(this->sinComu)) < 0) {
 		perror("error connecting to server");
@@ -41,6 +43,7 @@ void client_TCP::sendMessage(const char* message){
 
 string client_TCP::receiveMessage() {
 	char buffer[4096];
+	memset(buffer, 0, sizeof(buffer));
 	int expected_data_len = sizeof(buffer);
 	int read_bytes = recv(this->sock, buffer, expected_data_len, 0);
 	if (read_bytes == 0) {

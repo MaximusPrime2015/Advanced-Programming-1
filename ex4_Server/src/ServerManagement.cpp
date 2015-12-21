@@ -6,6 +6,7 @@
  */
 
 #include "ServerManagement.h"
+#define EXIT "-1"
 
 ServerManagement::ServerManagement(int type, int port) {
 	if (type == 1) {
@@ -27,15 +28,20 @@ ServerManagement::~ServerManagement() {
 }
 
 void ServerManagement::startCommunication(){
-	std::string EXIT = "-1";
+	std::string out;
+	std::string client_In;
 	const char *message;
 	const char *buffer;
 
 	do{
-		buffer = server_cmt->receiveMessage().c_str();
-		message = system->start(buffer);
+		client_In = server_cmt->receiveMessage();
+		buffer = client_In.c_str();
+
+		out = system->start(buffer);
+		message = out.c_str();
+
 		server_cmt->sendMessage(message);
-	} while(buffer != EXIT);
+	} while(client_In != EXIT);
 
 	server_cmt->closeconnection();
 }

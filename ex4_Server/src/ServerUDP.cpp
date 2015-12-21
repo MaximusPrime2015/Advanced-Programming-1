@@ -24,7 +24,6 @@ void ServerUDP::setCommunication(int port) {
 	sinServer.sin_family = AF_INET;
 	sinServer.sin_addr.s_addr = INADDR_ANY;
 	sinServer.sin_port = htons(port);
-
 	if (bind(server_sock, (struct sockaddr *) &sinServer, sizeof(sinServer))
 			< 0) {
 		perror("ServerUDP: error binding to socket");
@@ -33,10 +32,11 @@ void ServerUDP::setCommunication(int port) {
 
 void ServerUDP::sendMessage(const char* message) {
 	int data_len = strlen(message);
-	int sent_bytes = sendto(client_sock, message, data_len, 0,
-			(struct sockaddr *) &this->sinServer, sizeof(this->sinServer));
+
+	int sent_bytes = sendto(server_sock, message, data_len, 0,
+			(struct sockaddr *) &sinClient, sizeof(sinClient));
 	if (sent_bytes < 0) {
-		perror("ServerUDP: error sending message to server");
+		perror("ServerUDP: error sending message to client");
 	}
 }
 
@@ -47,7 +47,7 @@ std::string ServerUDP::receiveMessage() {
 	unsigned int sinClient_len = sizeof(struct sockaddr_in);
 	char buffer[4096] = { 0 };
 	int bytes = recvfrom(server_sock, buffer, sizeof(buffer), 0,
-			(struct sockaddr *) &this->sinClient, &sinClient_len);
+			(struct sockaddr *) &sinClient, &sinClient_len);
 	if (bytes < 0) {
 		perror("ServerUDP: error reading from socket");
 	}

@@ -9,7 +9,8 @@
 #include <stdlib.h>
 
 int main(int argc,char** argv){
-	close(3);
+	using namespace std;
+
 	ServerManagement *sm;
 	int type = atoi(argv[1]);
 	int port = atoi(argv[2]);

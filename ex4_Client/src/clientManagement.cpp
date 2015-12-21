@@ -8,14 +8,16 @@
 #include "clientManagement.h"
 #include "clientUDP.h"
 #include "clientTCP.h"
+#define EXIT "-1"
+
 client_Management::client_Management(int type, int port, char *ip) {
 	if (type == 1) {
-		this->client_cmt = new client_UDP();
+		client_cmt = new client_UDP();
 	} else if (type == 0) {
-		this->client_cmt = new client_TCP();
+		client_cmt = new client_TCP();
 	}
 
-	this->client_cmt->setCommunication(ip, port);
+	client_cmt->setCommunication(ip, port);
 }
 
 client_Management::~client_Management() {
@@ -23,20 +25,22 @@ client_Management::~client_Management() {
 }
 
 void client_Management::startCommunication() {
-	string EXIT = "-1";
-	string input,choice;
+	string input,choice, output;
 	const char *message;
 	const char *buffer;
 	do {
 		cin >> choice;
 		getline(cin,input);
-		input = input + choice;
+		input = choice + input;
 		message = input.c_str();
-		this->client_cmt->sendMessage(message);
-		buffer = this->client_cmt->receiveMessage().c_str();
-		cout << buffer << endl;
-
+		client_cmt->sendMessage(message);
+		output = client_cmt->receiveMessage();
+		if(output != EXIT){
+			buffer = output.c_str();
+			cout << buffer;
+		}
 	}while (choice != EXIT);
-	this->client_cmt->closeconnection();
+
+	client_cmt->closeconnection();
 }
 

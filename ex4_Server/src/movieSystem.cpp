@@ -13,6 +13,8 @@
 #include "ComparatorWrapper.h"
 #include "CompareFuncs.h"
 #define	skipSpace index++
+#define success "Success\n"
+#define failure "Failure\n"
 
 /*
  *	adds a movie to the system.
@@ -23,15 +25,15 @@ std::string MovieSystem::addMovie(std::string code, std::string name,
 		int length, int rlsYear, float rating, std::string summary){
 	// movie with given code is in the system
 	if (find_if(Movies.begin(), Movies.end(), movieCode_Equal(code)) != Movies.end()){
-		return "Failure";
+		return failure;
 	}
 	try{
 	Movie* movie = new Movie(code, name, length, rlsYear, rating, summary);
 	Movies.push_back(movie);
-	return "Success";
+	return success;
 	}
 	catch (std::string &e) {
-		return "Failure";
+		return failure;
 	}
 }
 
@@ -46,15 +48,15 @@ std::string MovieSystem::addProfessional(std::string id, std::string name,
 
 	// pro with given id is in the system
 	if (find_if(Professionals.begin(), Professionals.end(), proID_Equal(id)) != Professionals.end()){
-		return "Failure";
+		return failure;
 	}
 	try{
 	Professional* pro = factory.create(id, name, age, gender,jobDescription,profType);
 	Professionals.push_back(pro);
-	return "Success";
+	return success;
 	}
 	catch (std::string &e) {
-		return "Failure";
+		return failure;
 	}
 }
 
@@ -73,14 +75,14 @@ std::string MovieSystem::addProfessionalToMovie(std::string movieCode, std::stri
 	movieGeneralIT = find_if(Movies.begin(), Movies.end(), movieCode_Equal(movieCode));
 	// movie not found
 	if (movieGeneralIT == Movies.end()){
-		return "Failure";
+		return failure;
 	}
 	movie = *movieGeneralIT;
 
 	proGeneralIT = find_if(Professionals.begin(), Professionals.end(), proID_Equal(profID));
 	// pro not found
 	if (proGeneralIT == Professionals.end()){
-		return "Failure";
+		return failure;
 	}
 	pro = *proGeneralIT;
 
@@ -89,7 +91,7 @@ std::string MovieSystem::addProfessionalToMovie(std::string movieCode, std::stri
 
 	// pro is in the movie
 	if(movie->proIteratorHasNext(proIT)){
-		return "Failure";
+		return failure;
 	}
 
 	pro->addMovie(movie);
@@ -97,7 +99,7 @@ std::string MovieSystem::addProfessionalToMovie(std::string movieCode, std::stri
 	// sort professional list
 	sortMovieProfessionals(movieCode, 1);
 
-	return "Success";
+	return success;
 }
 
 /*
@@ -115,7 +117,7 @@ std::string MovieSystem::addMovieToGenre(std::string MovieCode, std::string genr
 	movieGeneralIT = find_if(Movies.begin(), Movies.end(), movieCode_Equal(MovieCode));
 	// movie not found
 	if (movieGeneralIT == Movies.end()){
-		return "Failure";
+		return failure;
 	}
 	movie = *movieGeneralIT;
 	genreIT = genreToMovies.find(genre);
@@ -132,7 +134,7 @@ std::string MovieSystem::addMovieToGenre(std::string MovieCode, std::string genr
 		genre_movies->push_back(movie);
 		movie->addGenre(genre);
 	}
-	return "Success";
+	return success;
 }
 
 /*
@@ -146,11 +148,11 @@ std::string MovieSystem::sortMovieProfessionals(std::string MovieCode, int order
 	movieIT = find_if(Movies.begin(), Movies.end(), movieCode_Equal(MovieCode));
 	// movie not found
 	if (movieIT == Movies.end()){
-		return "Failure";
+		return failure;
 	}
 	(*movieIT)->sortProfessionals(order);
 
-	return "Success";
+	return success;
 }
 
 /*
@@ -164,7 +166,7 @@ std::string MovieSystem::printMovieProfessionals(std::string MovieCode){
 	movieIT = find_if(Movies.begin(), Movies.end(), movieCode_Equal(MovieCode));
 	// movie not found
 	if (movieIT == Movies.end()){
-		return "Failure";
+		return failure;
 	}
 	return (*movieIT)->printProfessionals();
 }
@@ -180,7 +182,7 @@ std::string MovieSystem::printMovie(std::string MovieCode){
 	movieIT = find_if(Movies.begin(), Movies.end(), movieCode_Equal(MovieCode));
 	// movie not found
 	if (movieIT == Movies.end()){
-		return "Failure";
+		return failure;
 	}
 	return (*movieIT)->printMovie();
 }
@@ -202,7 +204,7 @@ std::string MovieSystem::mergeMovies(std::vector<std::string> movieCodes){
 	it = movieCodes.begin();
 	movieIT = find_if(Movies.begin(), Movies.end(), movieCode_Equal(*it));
 	if (movieIT == Movies.end()){
-		return "Failure";
+		return failure;
 	}
 
 	movie = *movieIT;
@@ -211,7 +213,7 @@ std::string MovieSystem::mergeMovies(std::vector<std::string> movieCodes){
 	while (it != movieCodes.end()){
 		movieIT = find_if(Movies.begin(), Movies.end(), movieCode_Equal(*it));
 		if (movieIT == Movies.end()){
-			return "Failure";
+			return failure;
 		}
 		tempMovie = movie;
 		movie = movie->mergeWith(*movieIT);
@@ -230,7 +232,7 @@ std::string MovieSystem::mergeMovies(std::vector<std::string> movieCodes){
 		// add the new movie to genres
 		(genreToMovies.find(*auxGenreIT)->second)->push_back(movie);
 	}
-	return "Success";
+	return success;
 }
 
 /*
@@ -246,7 +248,7 @@ std::string MovieSystem::printMoviesWithProfessional(std::string id){
 
 	pIT = find_if(Professionals.begin(),Professionals.end(), proID_Equal(id));
 	if (pIT == Professionals.end()){
-		return "Failure\n";
+		return failure;
 	}
 	pro = *pIT;
 	for(mIT = pro->getMovies()->begin(); mIT != pro->getMovies()->end(); mIT++){
@@ -272,7 +274,7 @@ std::string MovieSystem::deleteMovie(std::string movieCode){
 	movieGeneralIT = find_if(Movies.begin(), Movies.end(), movieCode_Equal(movieCode));
 	// movie not found
 	if (movieGeneralIT == Movies.end()){
-		return "Failure";
+		return failure;
 	}
 	movie = *movieGeneralIT;
 	proVector = movie->getProfessionals();
@@ -292,7 +294,7 @@ std::string MovieSystem::deleteMovie(std::string movieCode){
 	}
 	// Delete the movie
 	Movies.erase(movieGeneralIT);
-	return "Success";
+	return success;
 }
 
 /*
@@ -310,7 +312,7 @@ std::string MovieSystem::deleteProfessional(std::string proID){
 	proGeneralIT = find_if(Professionals.begin(), Professionals.end(), proID_Equal(proID));
 	// movie not found
 	if (proGeneralIT == Professionals.end()){
-		return "Failure";
+		return failure;
 	}
 	pro = *proGeneralIT;
 	movieVector = pro->getMovies();
@@ -321,7 +323,7 @@ std::string MovieSystem::deleteProfessional(std::string proID){
 	}
 	// Delete the pro
 	Professionals.erase(proGeneralIT);
-	return "Success";
+	return success;
 }
 
 /*
@@ -337,17 +339,17 @@ std::string MovieSystem::deleteProfessionalFromMovie(std::string MovieCode, std:
 	movieGeneralIT = find_if(Movies.begin(), Movies.end(), movieCode_Equal(MovieCode));
 	// movie not found
 	if (movieGeneralIT == Movies.end()){
-		return "Failure";
+		return failure;
 	}
 	movie = *movieGeneralIT;
 	proIT = movie->findProfessional(profID);
 
 	// pro not found
 	if (!movie->proIteratorHasNext(proIT)){
-		return "Failure";
+		return failure;
 	}
 	movie->deleteProfessional(profID);
-	return "Success";
+	return success;
 }
 
 /*
@@ -392,7 +394,7 @@ std::string MovieSystem::printMoviesByGenre(std::string genre){
 
 	gIT = genreToMovies.find(genre);
 	if(gIT == genreToMovies.end()){
-		return "Failure";
+		return failure;
 	}
 	gIT->second;
 	for(mIT = gIT->second->begin(); mIT != gIT->second->end(); mIT++){
@@ -423,7 +425,7 @@ std::vector<std::string> split(const std::string &s, char delim) {
  * start function for the system.
  * handles data from the client.
  */
-const char* MovieSystem::start(const char *input){
+std::string MovieSystem::start(const char *input){
 	using namespace std;
 	int i, command;
 	string client_input;
@@ -441,35 +443,35 @@ const char* MovieSystem::start(const char *input){
 		case -1:
 			return "-1";
 		case 1:
-			return process_AddMovie(client_input, i).c_str();
+			return process_AddMovie(client_input, i);
 		case 2:
-			return process_AddProfessional(client_input, i).c_str();
+			return process_AddProfessional(client_input, i);
 		case 3:
-			return process_addProfessionalToMovie(client_input, i).c_str();
+			return process_addProfessionalToMovie(client_input, i);
 		case 4:
-			return process_addMovieToGenre(client_input, i).c_str();
+			return process_addMovieToGenre(client_input, i);
 		case 5:
-			return process_sortMovieProfessionals(client_input, i).c_str();
+			return process_sortMovieProfessionals(client_input, i);
 		case 6:
-			return process_printMovieProfessionals(client_input, i).c_str();
+			return process_printMovieProfessionals(client_input, i);
 		case 7:
-			return process_printMovie(client_input, i).c_str();
+			return process_printMovie(client_input, i);
 		case 8:
-			return process_mergeMovies(client_input, i).c_str();
+			return process_mergeMovies(client_input, i);
 		case 9:
-			return process_printMoviesWithProfessional(client_input, i).c_str();
+			return process_printMoviesWithProfessional(client_input, i);
 		case 10:
-			return process_deleteMovie(client_input, i).c_str();
+			return process_deleteMovie(client_input, i);
 		case 11:
-			return process_deleteProfessional(client_input, i).c_str();
+			return process_deleteProfessional(client_input, i);
 		case 12:
-			return process_deleteProfessionalFromMovie(client_input, i).c_str();
+			return process_deleteProfessionalFromMovie(client_input, i);
 		case 13:
-			return printMoviesList().c_str();
+			return printMoviesList();
 		case 14:
-			return printProfessionalsList().c_str();
+			return printProfessionalsList();
 		case 15:
-			return process_printMoviesByGenre(client_input, i).c_str();
+			return process_printMoviesByGenre(client_input, i);
 		default:
 			break;
 	}
