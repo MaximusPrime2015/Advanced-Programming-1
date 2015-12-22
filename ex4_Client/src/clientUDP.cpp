@@ -17,6 +17,9 @@ client_UDP::client_UDP() {
 client_UDP::~client_UDP() {
 }
 
+/*
+ *	Initializes needed components for UDP connection.
+ */
 void client_UDP::setCommunication(char * ip, int port) {
 	this->sock = socket(AF_INET, SOCK_DGRAM, 0);
 	if (sock < 0) {
@@ -28,6 +31,9 @@ void client_UDP::setCommunication(char * ip, int port) {
 	this->sinComu.sin_port = htons(port);
 }
 
+/*
+ * sends a message to server.
+ */
 void client_UDP::sendMessage(const char* message) {
 	int data_len = strlen(message);
 	int sent_bytes = sendto(sock, message, data_len, 0,
@@ -37,6 +43,9 @@ void client_UDP::sendMessage(const char* message) {
 	}
 }
 
+/*
+ * receives a message from server.
+ */
 string client_UDP::receiveMessage() {
 	unsigned int from_len = sizeof(struct sockaddr_in);
 	char buffer[4096];

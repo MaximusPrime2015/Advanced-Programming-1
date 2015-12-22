@@ -8,6 +8,11 @@
 #include "ServerManagement.h"
 #define EXIT "-1"
 
+/*
+ * c'tor.
+ * Creates applicable server_communicator according to given type, and initializes it.
+ * Initializes movieSystem.
+ */
 ServerManagement::ServerManagement(int type, int port) {
 	if (type == 1) {
 		server_cmt = new ServerUDP();
@@ -27,6 +32,10 @@ ServerManagement::~ServerManagement() {
 	delete server_cmt;
 }
 
+/*
+ * Recieves a message from client, sends it to start() function for processing,
+ *  and sends start()'s output to client.
+ */
 void ServerManagement::startCommunication(){
 	std::string out;
 	std::string client_In;

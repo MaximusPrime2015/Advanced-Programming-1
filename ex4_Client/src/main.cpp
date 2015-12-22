@@ -8,6 +8,10 @@
 #include <stdlib.h>
 #include "clientManagement.h"
 using namespace std;
+
+/*
+ * initializes client_Management from arguments, and begins communication with server.
+ */
 int main(int argc, char** argv) {
 	client_Management *cmt;
 	int type = atoi(argv[1]);

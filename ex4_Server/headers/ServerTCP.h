@@ -12,8 +12,26 @@
 class ServerTCP: public Server_Communicator {
 public:
 	ServerTCP();
+
+	/*
+	 * Action: Initializes needed components for TCP connection.
+	 * Input: a port for the server to use.
+	 * output: none.
+	 */
 	void setCommunication(int port);
+
+	/*
+	 * Action: sends a message to client.
+	 * Input: a const char pointer to a message to send.
+	 * output: none.
+	 */
 	void sendMessage(const char* message);
+
+	/*
+	 * Action: recieves a message from a client.
+	 * Input: none.
+	 * output: recieved message.
+	 */
 	std::string receiveMessage();
 };
 

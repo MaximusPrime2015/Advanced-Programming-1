@@ -10,12 +10,16 @@
 #include <iostream>
 #include <stdlib.h>
 #include <string.h>
+
 client_TCP::client_TCP() {
 }
 
 client_TCP::~client_TCP() {
 }
 
+/*
+ *	Initializes needed components for TCP connection.
+ */
 void client_TCP::setCommunication(char * ip, int port) {
 	this->sock = socket(AF_INET, SOCK_STREAM, 0);
 	if (sock < 0) {
@@ -33,6 +37,9 @@ void client_TCP::setCommunication(char * ip, int port) {
 	}
 }
 
+/*
+ * sends a message to server.
+ */
 void client_TCP::sendMessage(const char* message){
 	int data_len = strlen(message);
 	int send_message = send(this->sock,message,data_len,0);
@@ -41,6 +48,9 @@ void client_TCP::sendMessage(const char* message){
 	}
 }
 
+/*
+ * receives a message from server.
+ */
 string client_TCP::receiveMessage() {
 	char buffer[4096];
 	memset(buffer, 0, sizeof(buffer));

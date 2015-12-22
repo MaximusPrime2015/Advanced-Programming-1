@@ -13,8 +13,6 @@ Server_Communicator::Server_Communicator() {
 }
 
 Server_Communicator::~Server_Communicator() {
-	close(server_sock);
-	close(client_sock);
 }
 /*
  * The function closes the connection between the server and the client.

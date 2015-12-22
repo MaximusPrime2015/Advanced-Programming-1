@@ -16,7 +16,7 @@ ServerTCP::ServerTCP() {
 }
 
 /*
- *
+ *	Initializes needed components for TCP connection.
  */
 void ServerTCP::setCommunication(int port){
 	server_sock = socket(AF_INET, SOCK_STREAM, 0);
@@ -44,7 +44,7 @@ void ServerTCP::setCommunication(int port){
 }
 
 /*
- *
+ *	sends a message to client.
  */
 void ServerTCP::sendMessage(const char* message){
 	int send_message;
@@ -63,7 +63,7 @@ void ServerTCP::sendMessage(const char* message){
 }
 
 /*
- *
+ *	recieves a message from client.
  */
 std::string ServerTCP::receiveMessage(){
 	char buffer[4096];

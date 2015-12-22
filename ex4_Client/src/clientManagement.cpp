@@ -10,6 +10,10 @@
 #include "clientTCP.h"
 #define EXIT "-1"
 
+/*
+ * c'tor.
+ * initializes client_cmt to applicable type.
+ */
 client_Management::client_Management(int type, int port, char *ip) {
 	if (type == 1) {
 		client_cmt = new client_UDP();
@@ -20,10 +24,16 @@ client_Management::client_Management(int type, int port, char *ip) {
 	client_cmt->setCommunication(ip, port);
 }
 
+/*
+ * d'tor.
+ */
 client_Management::~client_Management() {
 	delete this->client_cmt;
 }
 
+/*
+ * gets a command from console, sends it to server, and prints out received response.
+ */
 void client_Management::startCommunication() {
 	string input,choice, output;
 	const char *message;

@@ -13,7 +13,7 @@ ServerUDP::ServerUDP() {
 }
 
 /*
- *
+ *	initializes the needed components for UDP connection.
  */
 void ServerUDP::setCommunication(int port) {
 	server_sock = socket(AF_INET, SOCK_DGRAM, 0);
@@ -30,6 +30,9 @@ void ServerUDP::setCommunication(int port) {
 	}
 }
 
+/*
+ * sends a message to client.
+ */
 void ServerUDP::sendMessage(const char* message) {
 	int data_len = strlen(message);
 
@@ -41,7 +44,7 @@ void ServerUDP::sendMessage(const char* message) {
 }
 
 /*
- *
+ *	recieves a message from client.
  */
 std::string ServerUDP::receiveMessage() {
 	unsigned int sinClient_len = sizeof(struct sockaddr_in);

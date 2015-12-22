@@ -8,6 +8,9 @@
 #include <iostream>
 #include <stdlib.h>
 
+/*
+ * initializes ServerManagement from arguments, and begins communication with client.
+ */
 int main(int argc,char** argv){
 	using namespace std;
 
