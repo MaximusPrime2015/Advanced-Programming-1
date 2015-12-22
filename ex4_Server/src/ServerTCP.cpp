@@ -47,9 +47,16 @@ void ServerTCP::setCommunication(int port){
  *
  */
 void ServerTCP::sendMessage(const char* message){
+	int send_message;
 	int data_len = strlen(message);
 
-	int send_message = send(client_sock, message, data_len,0);
+
+	if (data_len == 0){
+		send_message = send(client_sock, message, 1,0);
+	}
+	else{
+		send_message = send(client_sock, message, data_len,0);
+	}
 	if (send_message < 0) {
 		perror("ServerTCP: error sending message to client");
 	}
