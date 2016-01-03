@@ -15,9 +15,9 @@
  * initializes client_cmt to applicable type.
  */
 client_Management::client_Management(int type, int port, char *ip) {
-	if (type == 1) {
+	if (type == 0) {
 		client_cmt = new client_UDP();
-	} else if (type == 0) {
+	} else if (type == 1) {
 		client_cmt = new client_TCP();
 	}
 

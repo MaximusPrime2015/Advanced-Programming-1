@@ -14,13 +14,26 @@
  * Initializes movieSystem.
  */
 ServerManagement::ServerManagement(int type, int port) {
-	if (type == 1) {
-		server_cmt = new ServerUDP();
-	} else if (type == 0) {
-		server_cmt = new ServerTCP();
+	if (pthread_mutex_init(&lock, NULL) != 0)
+	{
+		perror("Error with init the mutex lock.");
 	}
 
-	system = new MovieSystem();
+	if (type == 0) {
+		server_cmt = new ServerUDP();
+	} else if (type == 1) {
+		server_cmt = new ServerTCP();
+	}
+	if (!created) {
+		pthread_mutex_lock(&lock);
+		if (!created) {
+			system = new MovieSystem();
+			created = true;
+		}
+		pthread_mutex_unlock(&lock);
+
+	}
+
 	server_cmt->setCommunication(port);
 }
 
@@ -30,6 +43,7 @@ ServerManagement::ServerManagement(int type, int port) {
 ServerManagement::~ServerManagement() {
 	delete system;
 	delete server_cmt;
+	pthread_mutex_destroy(&lock);
 }
 
 /*
