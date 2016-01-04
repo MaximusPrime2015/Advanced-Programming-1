@@ -44,7 +44,7 @@ public:
 	 * Input: const char to message.
 	 * Output: none.
 	 */
-	virtual void sendMessage(const char* message) = 0;
+	virtual void sendMessage(const char* message, int clientSock) = 0;
 
 	/*
 	 * Action:
@@ -52,7 +52,7 @@ public:
 	 * Input: none.
 	 * Output: string containing the message.
 	 */
-	virtual std::string receiveMessage() = 0;
+	virtual std::string receiveMessage(int clientSock) = 0;
 
 	/*
 	 * Action:

@@ -18,5 +18,7 @@ int main(int argc,char** argv){
 	int type = atoi(argv[1]);
 	int port = atoi(argv[2]);
 	sm = new ServerManagement(type,port);
-	sm->startCommunication();
+	//sm->startCommunication();
+
+	delete sm;
 }

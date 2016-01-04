@@ -33,7 +33,7 @@ void ServerUDP::setCommunication(int port) {
 /*
  * sends a message to client.
  */
-void ServerUDP::sendMessage(const char* message) {
+void ServerUDP::sendMessage(const char* message, int clientSock) {
 	int data_len = strlen(message);
 
 	int sent_bytes = sendto(server_sock, message, data_len, 0,
@@ -46,7 +46,7 @@ void ServerUDP::sendMessage(const char* message) {
 /*
  *	recieves a message from client.
  */
-std::string ServerUDP::receiveMessage() {
+std::string ServerUDP::receiveMessage(int clientSock) {
 	unsigned int sinClient_len = sizeof(struct sockaddr_in);
 	char buffer[4096] = { 0 };
 	int bytes = recvfrom(server_sock, buffer, sizeof(buffer), 0,

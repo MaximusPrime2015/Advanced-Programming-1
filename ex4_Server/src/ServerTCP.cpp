@@ -6,19 +6,27 @@
  */
 
 #include "ServerTCP.h"
+#define EXIT "-1"
 
+static void* startCommunication(void* pak);
 /*
  *
  */
 ServerTCP::ServerTCP() {
 	// TODO Auto-generated constructor stub
-
+	if (pthread_mutex_init(&lock, NULL) != 0)
+	{
+		perror("Error with init the mutex lock.");
+	}
 }
 
 /*
  *	Initializes needed components for TCP connection.
  */
 void ServerTCP::setCommunication(int port){
+	CommunicationPacket* pak;
+	pthread_t t;
+
 	server_sock = socket(AF_INET, SOCK_STREAM, 0);
 	if (server_sock < 0) {
 		perror("ServerTCP: error creating socket");
@@ -32,30 +40,47 @@ void ServerTCP::setCommunication(int port){
 		perror("ServerTCP: error binding socket");
 	}
 	// only 1 client at a time
-	if(listen(server_sock, 1) < 0){
+	if(listen(server_sock, 5) < 0){
 		perror("ServerTCP: error listening to a socket");
 	}
-	unsigned int addr_len = sizeof(sinClient);
-	client_sock = accept(server_sock, (struct sockaddr *)&sinClient, &addr_len);
+	while(true){
+		unsigned int addr_len = sizeof(sinClient);
+		client_sock = accept(server_sock, (struct sockaddr *)&sinClient, &addr_len);
+		if(client_sock < 0){
+			perror("ServerTCP: error accepting client");
+		}
 
-	if(client_sock < 0){
-		perror("ServerTCP: error accepting client");
+		if (!created) {
+			pthread_mutex_lock(&lock);
+			if (!created) {
+				system = new MovieSystem();
+				created = true;
+			}
+			pthread_mutex_unlock(&lock);
+		}
+		pak = new CommunicationPacket(client_sock, system);
+		// create thread for client
+		int status = pthread_create(&t, NULL, startCommunication, (void*)pak);
+
+		if(status){
+			// error
+		}
 	}
 }
 
 /*
  *	sends a message to client.
  */
-void ServerTCP::sendMessage(const char* message){
+void ServerTCP::sendMessage(const char* message, int clientSock){
 	int send_message;
 	int data_len = strlen(message);
 
 
 	if (data_len == 0){
-		send_message = send(client_sock, message, 1,0);
+		send_message = send(clientSock, message, 1,0);
 	}
 	else{
-		send_message = send(client_sock, message, data_len,0);
+		send_message = send(clientSock, message, data_len,0);
 	}
 	if (send_message < 0) {
 		perror("ServerTCP: error sending message to client");
@@ -65,12 +90,12 @@ void ServerTCP::sendMessage(const char* message){
 /*
  *	recieves a message from client.
  */
-std::string ServerTCP::receiveMessage(){
+std::string ServerTCP::receiveMessage(int clientSock){
 	char buffer[4096];
 	memset(buffer, 0, sizeof(buffer));
 
 	int expected_data_len = sizeof(buffer);
-	int read_bytes = recv(client_sock, buffer, expected_data_len, 0);
+	int read_bytes = recv(clientSock, buffer, expected_data_len, 0);
 
 	if (read_bytes == 0) {
 		perror("ServerTCP: lost connection");
@@ -80,4 +105,25 @@ std::string ServerTCP::receiveMessage(){
 		return buffer;
 	}
 	return "";
+}
+
+void* startCommunication(void* givenPak){
+	std::string out;
+	std::string client_In;
+	const char *message;
+	const char *buffer;
+	ServerTCP server;
+	CommunicationPacket* pak = (CommunicationPacket*)givenPak;
+
+	do{
+		client_In = server.receiveMessage(pak->getClientSock());
+		buffer = client_In.c_str();
+
+		out = (pak->getMovieSystem())->start(buffer);
+		message = out.c_str();
+
+		server.sendMessage(message, pak->getClientSock());
+	} while(client_In != EXIT);
+
+	server.closeconnection();
 }

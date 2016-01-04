@@ -14,24 +14,10 @@
  * Initializes movieSystem.
  */
 ServerManagement::ServerManagement(int type, int port) {
-	if (pthread_mutex_init(&lock, NULL) != 0)
-	{
-		perror("Error with init the mutex lock.");
-	}
-
 	if (type == 0) {
 		server_cmt = new ServerUDP();
 	} else if (type == 1) {
 		server_cmt = new ServerTCP();
-	}
-	if (!created) {
-		pthread_mutex_lock(&lock);
-		if (!created) {
-			system = new MovieSystem();
-			created = true;
-		}
-		pthread_mutex_unlock(&lock);
-
 	}
 
 	server_cmt->setCommunication(port);
@@ -43,13 +29,14 @@ ServerManagement::ServerManagement(int type, int port) {
 ServerManagement::~ServerManagement() {
 	delete system;
 	delete server_cmt;
-	pthread_mutex_destroy(&lock);
+	//pthread_mutex_destroy(&lock);
 }
 
 /*
  * Recieves a message from client, sends it to start() function for processing,
  *  and sends start()'s output to client.
  */
+/*
 void ServerManagement::startCommunication(){
 	std::string out;
 	std::string client_In;
@@ -68,3 +55,4 @@ void ServerManagement::startCommunication(){
 
 	server_cmt->closeconnection();
 }
+*/

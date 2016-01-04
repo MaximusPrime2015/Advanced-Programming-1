@@ -16,8 +16,6 @@ class ServerManagement {
 private:
 	MovieSystem *system;
 	Server_Communicator *server_cmt;
-	bool created = false;
-	pthread_mutex_t lock;
 public:
 
 	/*

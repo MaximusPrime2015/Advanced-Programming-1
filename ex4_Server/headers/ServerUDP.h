@@ -24,14 +24,14 @@ public:
 	 * Input: a const char pointer to a message to send.
 	 * output: none.
 	 */
-	void sendMessage(const char* message);
+	void sendMessage(const char* message, int clientSock);
 
 	/*
 	 * Action: recieves a message from a client.
 	 * Input: none.
 	 * output: recieved message.
 	 */
-	std::string receiveMessage();
+	std::string receiveMessage(int clientSock);
 };
 
 #endif /* SERVERUDP_H_ */
