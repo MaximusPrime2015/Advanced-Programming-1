@@ -27,32 +27,6 @@ ServerManagement::ServerManagement(int type, int port) {
  * d'tor.
  */
 ServerManagement::~ServerManagement() {
-	delete system;
 	delete server_cmt;
-	//pthread_mutex_destroy(&lock);
 }
 
-/*
- * Recieves a message from client, sends it to start() function for processing,
- *  and sends start()'s output to client.
- */
-/*
-void ServerManagement::startCommunication(){
-	std::string out;
-	std::string client_In;
-	const char *message;
-	const char *buffer;
-
-	do{
-		client_In = server_cmt->receiveMessage();
-		buffer = client_In.c_str();
-
-		out = system->start(buffer);
-		message = out.c_str();
-
-		server_cmt->sendMessage(message);
-	} while(client_In != EXIT);
-
-	server_cmt->closeconnection();
-}
-*/

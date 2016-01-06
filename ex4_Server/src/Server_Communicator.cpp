@@ -12,8 +12,12 @@ Server_Communicator::Server_Communicator() {
 	client_sock = -1;
 }
 
+/*
+ * d'tor.
+ */
 Server_Communicator::~Server_Communicator() {
 }
+
 /*
  * The function closes the connection between the server and the client.
  */

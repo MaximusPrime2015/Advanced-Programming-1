@@ -15,9 +15,24 @@ private:
 	int clientSock;
 	MovieSystem *ms;
 public:
+	/*
+	 * c'tor.
+	 */
 	CommunicationPacket(int client, MovieSystem* ms);
+
+	/*
+	 * Returns client socket.
+	 */
 	int getClientSock();
+
+	/*
+	 * Returns pointer to MovieSystem.
+	 */
 	MovieSystem* getMovieSystem();
+
+	/*
+	 * d'tor.
+	 */
 	virtual ~CommunicationPacket();
 };
 

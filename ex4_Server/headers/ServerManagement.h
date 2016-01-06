@@ -10,11 +10,9 @@
 #include "Server_Communicator.h"
 #include "ServerUDP.h"
 #include "ServerTCP.h"
-#include "movieSystem.h"
 #include <pthread.h>
 class ServerManagement {
 private:
-	MovieSystem *system;
 	Server_Communicator *server_cmt;
 public:
 

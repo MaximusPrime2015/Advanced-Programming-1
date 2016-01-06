@@ -8,12 +8,20 @@
 #include "ServerTCP.h"
 #define EXIT "-1"
 MovieSystem* ServerTCP::system = NULL;
+
+/*
+ * Action: Receives a message from client, sends it to start() function for processing, and sends start()'s output to client.
+ * Input: CommunicationPacket.
+ * output: none.
+ */
 static void* startCommunication(void* pak);
+
 /*
  *
  */
 ServerTCP::ServerTCP() {
 	// TODO Auto-generated constructor stub
+	created = false;
 	if (pthread_mutex_init(&lock, NULL) != 0)
 	{
 		perror("Error with init the mutex lock.");
@@ -107,6 +115,11 @@ std::string ServerTCP::receiveMessage(int clientSock){
 	return "";
 }
 
+/*
+ * Receives a communicationPacket that contains client socket and movieSystem.
+ * Receives a message from client, sends it to start() function for processing,
+ * and sends start()'s output to client.
+ */
 void* startCommunication(void* givenPak){
 	std::string out;
 	std::string client_In;
