@@ -14,7 +14,7 @@
 
 class ServerTCP: public Server_Communicator {
 private:
-	MovieSystem *system;
+	static MovieSystem *system;
 	bool created = false;
 	pthread_mutex_t lock;
 public:

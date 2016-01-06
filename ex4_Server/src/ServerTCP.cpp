@@ -7,7 +7,7 @@
 
 #include "ServerTCP.h"
 #define EXIT "-1"
-
+MovieSystem* ServerTCP::system = NULL;
 static void* startCommunication(void* pak);
 /*
  *
@@ -113,9 +113,11 @@ void* startCommunication(void* givenPak){
 	const char *message;
 	const char *buffer;
 	ServerTCP server;
+	pthread_mutex_t locker;
 	CommunicationPacket* pak = (CommunicationPacket*)givenPak;
 
 	do{
+		pthread_mutex_lock(&locker);
 		client_In = server.receiveMessage(pak->getClientSock());
 		buffer = client_In.c_str();
 
@@ -123,6 +125,7 @@ void* startCommunication(void* givenPak){
 		message = out.c_str();
 
 		server.sendMessage(message, pak->getClientSock());
+		pthread_mutex_unlock(&locker);
 	} while(client_In != EXIT);
 
 	server.closeconnection();
