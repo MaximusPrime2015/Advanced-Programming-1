@@ -189,6 +189,10 @@ std::vector<Professional*>* Movie::getProfessionals(){
 	return &professionals;
 }
 
+std::string Movie::getImageURL(){
+	return imageURL;
+}
+
 /*
  *	sorts professionals vector in current movie.
  */

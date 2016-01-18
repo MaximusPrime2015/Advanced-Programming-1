@@ -32,7 +32,7 @@ std::string MovieSystem::addMovie(std::string code, std::string name,
 	Movies.push_back(movie);
 	return success;
 	}
-	catch (std::string &e) {
+	catch (const std::invalid_argument &e) {
 		return failure;
 	}
 }
@@ -55,7 +55,7 @@ std::string MovieSystem::addProfessional(std::string id, std::string name,
 	Professionals.push_back(pro);
 	return success;
 	}
-	catch (std::string &e) {
+	catch (const std::invalid_argument &e) {
 		return failure;
 	}
 }

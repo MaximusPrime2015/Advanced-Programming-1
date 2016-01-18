@@ -25,6 +25,7 @@ private:
 	std::vector<std::string> genres;
 	std::vector<Professional*> professionals;
 	std::string summary;
+	std::string imageURL;
 	void setGenreVector(std::vector<std::string> genreVec);
 	void setProsVector(std::vector<Professional*> pros);
 public:
@@ -77,6 +78,8 @@ public:
 	//| Returns: Movie's summary.
 	//---------------------------------------------
 	std::string getSummary();
+
+	std::string getImageURL();
 
 	//---------------------------------------------
 	//| Action: returns genre vector.
