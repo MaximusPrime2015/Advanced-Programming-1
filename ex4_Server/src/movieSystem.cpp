@@ -22,13 +22,13 @@
  *	return "Failure" if operation failed.
  */
 std::string MovieSystem::addMovie(std::string code, std::string name,
-		int length, int rlsYear, float rating, std::string summary){
+		int length, int rlsYear, float rating, std::string imageURL, std::string summary){
 	// movie with given code is in the system
 	if (find_if(Movies.begin(), Movies.end(), movieCode_Equal(code)) != Movies.end()){
 		return failure;
 	}
 	try{
-	Movie* movie = new Movie(code, name, length, rlsYear, rating, summary);
+	Movie* movie = new Movie(code, name, length, rlsYear, rating, imageURL, summary);
 	Movies.push_back(movie);
 	return success;
 	}
@@ -498,6 +498,7 @@ std::string MovieSystem::process_AddMovie(std::string strToProcess, int index){
 	int movieReleaseYear = 0;
 	int temp;
 	float movieRating;
+	std::string movieImageURL;
 	std::string movieDescription;
 
 	// ID
@@ -534,10 +535,13 @@ std::string MovieSystem::process_AddMovie(std::string strToProcess, int index){
 	movieRating += (temp/10.0);
 	skipSpace;
 
+	movieImageURL = getString(strToProcess, index);
+	skipSpace;
+
 	// movie Description
 	movieDescription = getEndOfString(strToProcess, index);
 
-	return addMovie(movieCode, movieName, movieLength, movieReleaseYear, movieRating, movieDescription);
+	return addMovie(movieCode, movieName, movieLength, movieReleaseYear, movieRating, movieImageURL, movieDescription);
 }
 
 /*

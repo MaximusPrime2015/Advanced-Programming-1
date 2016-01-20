@@ -34,7 +34,7 @@ public:
 	//| Input: code, name, length, release year, rating and summary.
 	//| Returns: none.
 	//---------------------------------------------
-	Movie(std::string code, std::string name, int length, int rlsYear, float rating,
+	Movie(std::string code, std::string name, int length, int rlsYear, float rating, std::string givenImageURL,
 	std::string summary);
 
 	//---------------------------------------------

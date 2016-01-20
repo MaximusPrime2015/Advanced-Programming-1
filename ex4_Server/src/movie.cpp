@@ -14,7 +14,7 @@
 #include <algorithm>
 
 Movie::Movie(std::string givenCode, std::string givenName, int givenLength, int givenRlsYear,
-		float givenRating, std::string givenSummary)
+		float givenRating, std::string givenImageURL, std::string givenSummary)
 {
 	if (givenCode == ""){
 		throw std::invalid_argument("Movie: cannot use empty code" );
@@ -45,6 +45,7 @@ Movie::Movie(std::string givenCode, std::string givenName, int givenLength, int 
 		throw std::invalid_argument("Movie: cannot use empty summary");
 	}
 	summary = givenSummary;
+	imageURL = givenImageURL;
 }
 
 /*
@@ -93,7 +94,7 @@ std::string Movie::printMovie(){
 	ratingBuffer << rating;
 
 	return code + " " + name + " " + lengthBuffer.str() + " " + rlsYearBuffer.str() +
-			" " + ratingBuffer.str() + " " + printGenresList() + summary + "\n" + printProfessionals();
+			" " + ratingBuffer.str() + " " + printGenresList()+ imageURL + " " + summary + "\n" + printProfessionals();
 }
 
 /*
@@ -300,7 +301,7 @@ Movie* Movie::mergeWith(Movie* other){
 	// other is longer
 	if(other->getLength() > length){
 		movie = new Movie(newCode, other->getName(), other->getLength(), other->getReleaseYear()
-				,other->getRating(),other->getSummary());
+				,other->getRating(),other->getImageURL() ,other->getSummary());
 		movie->setGenreVector(unitedGenres);
 		movie->setProsVector(unitedPros);
 		// add the movie to each pro's list
@@ -308,7 +309,7 @@ Movie* Movie::mergeWith(Movie* other){
 			(*proIT)->getMovies()->push_back(movie);
 		}
 	}else{
-		movie = new Movie(newCode, name, length, rlsYear, rating, summary);
+		movie = new Movie(newCode, name, length, rlsYear, rating, imageURL, summary);
 		movie->setGenreVector(unitedGenres);
 		movie->setProsVector(unitedPros);
 		// add the movie to each pro's list

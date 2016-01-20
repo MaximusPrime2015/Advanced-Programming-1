@@ -34,7 +34,7 @@ public:
 	* Returns: none.
 	*/
 	std::string addMovie(std::string code, std::string name, int length, int rlsYear, float
-	rating, std::string summary);
+	rating,std::string imageURL, std::string summary);
 
 	/*
 	* Action: adds a Professional to the system.
