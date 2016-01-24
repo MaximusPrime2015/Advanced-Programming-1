@@ -12,6 +12,7 @@
 #include "ComparatorFactory.h"
 #include "ComparatorWrapper.h"
 #include "CompareFuncs.h"
+#include <stdexcept>
 #define	skipSpace index++
 #define success "Success\n"
 #define failure "Failure\n"

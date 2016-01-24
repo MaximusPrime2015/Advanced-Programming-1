@@ -14,7 +14,7 @@ Professional::Professional(id, name, age, gender, jobDescription)
  * returns director description.
  */
 std::string Director::printProfessional(){
-	return name;
+	return "@"+name;
 }
 
 Director::~Director(){}

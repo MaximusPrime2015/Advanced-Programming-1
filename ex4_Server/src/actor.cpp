@@ -18,7 +18,7 @@ std::string Actor::printProfessional(){
 	std::ostringstream ageBuffer;
 	ageBuffer << age;
 
-	return name + " " + ageBuffer.str();
+	return "@"+name + " " + ageBuffer.str();
 }
 
 Actor::~Actor(){}

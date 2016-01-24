@@ -16,7 +16,7 @@ Professional::Professional(id, name, age, gender, jobDescription)
  */
 std::string Screenwriter::printProfessional(){
 
-	return name + " " + jobDescription;
+	return "@"+name + " " + jobDescription;
 }
 
 Screenwriter::~Screenwriter(){}

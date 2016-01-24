@@ -15,7 +15,7 @@ Professional::Professional(id, name, age, gender, jobDescription)
  * returns producer's description.
  */
 std::string Producer::printProfessional(){
-	return name;
+	return "@"+name;
 }
 
 Producer::~Producer(){}

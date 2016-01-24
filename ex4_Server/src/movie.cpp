@@ -93,7 +93,7 @@ std::string Movie::printMovie(){
 	rlsYearBuffer << rlsYear;
 	ratingBuffer << rating;
 
-	return code + " " + name + " " + lengthBuffer.str() + " " + rlsYearBuffer.str() +
+	return "#"+code + " " + name + " " + lengthBuffer.str() + " " + rlsYearBuffer.str() +
 			" " + ratingBuffer.str() + " " + printGenresList()+ imageURL + " " + summary + "\n" + printProfessionals();
 }
 
